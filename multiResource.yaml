@@ -1,0 +1,28 @@
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.small
+      ImageId: ami-0648742c7600c103f  
+      Tags: 
+        - key: "Name"
+          Value: !Join ["-", [my, inst, from, cloudformation]]
+      SecurityGroups: 
+        - !Ref GeraldSG
+    
+  GeraldSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ssh & http from MyIP
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: MyIp
+
+  
+  

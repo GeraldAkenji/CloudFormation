@@ -1,0 +1,39 @@
+AMIIDMap: 
+    us-east-1:
+      MyAMI1: ami-0ff8a91507f77f867
+      MyAMI2: ami-0a584ac55a7631c0c
+    us-west-1:
+      MyAMI1: ami-0bdb828fd58c52235
+      MyAMI2: ami-066ee5fd4a9ef77f1
+    us-west-2:
+      MyAMI1: ami-0648742c7600c103f 
+      MyAMI2: ami-0a7c483d527806435
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.small
+      ImageId: !FindInMap
+        - AmiRegionMap
+        - !Ref AWS::Region
+        - AMI
+      Tags: 
+        - key: "Name"
+          Value: !Join ["-", [my, inst, from, cloudformation]]
+      SecurityGroups: 
+        - !Ref GeraldSG
+
+  GeraldSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ssh & http from MyIP
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: MyIp        
+        
